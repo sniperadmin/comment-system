@@ -1,0 +1,8 @@
+{
+  "name": "comment-system",
+  "template": "Default",
+  "isConfigured": {
+    "client": false,
+    "server": false
+  }
+}
