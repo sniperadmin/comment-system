@@ -10,14 +10,27 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'password field is required'],
     },
-    posts: [
-      { type: Schema.Types.ObjectId, ref: 'Post' }
-    ],
-    comments: [
-      { type: Schema.Types.ObjectId, ref: 'Comment' }
-    ]
   },
   { timestamps: true },
 );
 
-module.exports = model('users', userSchema);
+/**
+ * @action define schema virtual for posts
+ * options included in object:
+ *    ref: Model name for Child collection
+ *    localField: Key for reference id, stored on Child Doc, as named on Parent Doc.
+ *    foreignField: Key name that holds localField value on Child Document
+ */
+userSchema.virtual('posts', {
+  ref: 'posts',
+  localField: '_id',
+  foreignField: 'user'
+})
+
+/**
+ * set Object & JSON to true
+ */
+userSchema.set('toObject', { virtuals: true })
+userSchema.set('toJSON', { virtuals: true })
+
+module.exports = model('users', userSchema)

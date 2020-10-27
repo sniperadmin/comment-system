@@ -17,4 +17,4 @@ const commentSchema = new Schema(
   }
 );
 
-module.exports = model('posts', commentSchema);
+module.exports = model('comments', commentSchema);

@@ -1,6 +1,7 @@
 'use strict';
 
 const User = require('../models/user_schema');
+// const Post = require('../models/post_schema');
 
 module.exports = {
   createData (req, res) {
@@ -21,7 +22,7 @@ module.exports = {
   },
 
   readData (req, res) {
-    User.find().populate('posts')
+    User.find().populate(['posts'])
       .then((data) => {
         res.status(200).json(data);
       })

@@ -1,11 +1,11 @@
-const Post = require('../models/post_schema');
+const Comment = require('../models/comment_schema');
 const User = require('../models/user_schema');
 
 module.exports = {
-  async getPosts(req, res) {
+  async getComments(req, res) {
     try {
-      const posts = await Post.find()
-      res.status(200).json(posts)
+      const comments = await Comment.find()
+      res.status(200).json(comments)
       
     } catch (error) {
       res.status(500).json(error)
@@ -17,16 +17,16 @@ module.exports = {
    * @param {object} req 
    * @param {mixed} res 
    */
-  async createPost(req, res) {
+  async createComment(req, res) {
     try {
-      const post = await Post.create(req.body)
-      await post.save();
+      const comment = await Comment.create(req.body)
+      await comment.save();
 
       /**
        * find publisher
        */
       const user = await User.findById(data.user)
-      await user.posts.push({ id: data })
+      await user.comments.push({ id: data })
       await user.save();
 
       res.status(201).json(data)
@@ -35,12 +35,12 @@ module.exports = {
     }
   },
 
-  async deletePost(req, res) {
+  async deleteComment(req, res) {
     try {
-      const post = await Post.findById(req.params.id)
+      const comment = await Comment.findById(req.params.id)
 
-      if (!post) {
-        throw new Error('post not available')
+      if (!comment) {
+        throw new Error('comment not available')
       }
 
       data.remove()

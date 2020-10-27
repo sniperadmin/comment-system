@@ -13,11 +13,20 @@ const postSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User'
-    },
-    comments: [
-      { type: Schema.Types.ObjectId, ref: 'Comment' }
-    ]
+    }
   }
 );
 
-module.exports = model('posts', postSchema);
+postSchema.virtual('comments', {
+  ref: 'comments',
+  localField: '_id',
+  foreignField: 'user'
+})
+
+/**
+ * set Object & JSON to true
+ */
+postSchema.set('toObject', { virtuals: true })
+postSchema.set('toJSON', { virtuals: true })
+
+module.exports = model('posts', postSchema)
