@@ -1,10 +1,15 @@
 const express = require('express');
-const path = require('path');
+
+const {
+  UserController
+} = require('../controllers');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-});
+router
+  .post('/', UserController.createData)
+  .get('/', UserController.readData)
+  .put('/:id', UserController.updateData)
+  .delete('/:id', UserController.deleteData);
 
 module.exports = router;
