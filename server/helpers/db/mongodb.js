@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const init = () => {
   mongoose
@@ -7,11 +7,11 @@ const init = () => {
       useUnifiedTopology: true,
     })
     .catch((err) => {
-      console.error('error: ' + err.stack);
+      console.error("error: " + err.stack);
       process.exit(1);
     });
-  mongoose.connection.on('open', () => {
-    console.log('connected to database');
+  mongoose.connection.on("open", () => {
+    console.log("connected to database");
   });
 };
 
