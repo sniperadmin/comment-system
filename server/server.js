@@ -1,6 +1,7 @@
 // Importing required modules
 const cors = require('cors');
 const express = require('express');
+const passport = require('passport');
 
 // parse env variables
 require('dotenv').config();
@@ -17,6 +18,9 @@ app.use(cors());
 app.use(express.json());
 
 app.set('view engine', 'html');
+
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 // Static folder
 app.use(express.static(__dirname + '/views/'));
