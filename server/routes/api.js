@@ -18,10 +18,10 @@ const router = express.Router()
 router
   .post('/register', UserController.registerUser)
   .post('/login', UserController.loginUser)
-  .get('/me', passport.authenticate('jwt', { session: false }, (req, res) => {
-    console.log(req)
-      return res.status(200).json(req)
-    })
+  .get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log('api request: ', req)
+      return res.status(200).json({ user: req.user })
+    }
   )
   .get('/users', UserController.loginUser)
   .put('/users/:id', UserController.updateData)
