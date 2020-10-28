@@ -2,6 +2,11 @@ const Post = require('../models/post_schema');
 const User = require('../models/user_schema');
 
 module.exports = {
+  /**
+   * 
+   * @param {object} req 
+   * @param {object} res 
+   */
   async getPosts(req, res) {
     try {
       const posts = await Post.find()
@@ -13,25 +18,31 @@ module.exports = {
   },
 
   /**
-   * 
+   * create
    * @param {object} req 
-   * @param {mixed} res 
+   * @param {object} res 
    */
   async createPost(req, res) {
     try {
-      const post = await Post.create(req.body)
-      await post.save();
-
+      const resData = await Post.create(req.body)
       /**
        * find publisher
        */
-      const user = await User.findById(data.user)
-      await user.posts.push({ id: data })
-      await user.save();
+      const user = await User.findById(resData.user)
+      // insert posts into the user object
+      if(!user.posts) {
+        user.posts = resData
+      }
 
-      res.status(201).json(data)
+      user.posts.push(resData)
+
+      res.status(201).json(resData)
     } catch (error) {
-      res.status(400).json(error)
+      if (error.name === 'ValidationError') {
+        return res.status(422).json(error)
+      } else {
+        return res.status(500).json(error)
+      }
     }
   },
 

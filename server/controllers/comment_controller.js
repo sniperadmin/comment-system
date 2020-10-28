@@ -1,5 +1,6 @@
 const Comment = require('../models/comment_schema');
 const User = require('../models/user_schema');
+const Post = require('../models/post_schema')
 
 module.exports = {
   async getComments(req, res) {
@@ -20,16 +21,21 @@ module.exports = {
   async createComment(req, res) {
     try {
       const comment = await Comment.create(req.body)
-      await comment.save();
-
       /**
        * find publisher
        */
-      const user = await User.findById(data.user)
-      await user.comments.push({ id: data })
-      await user.save();
+      const post = await Post.findById(comment.post)
+      const user = await User.findById(comment.user)
 
-      res.status(201).json(data)
+      if (!post.comments) {
+        post.comments = comment
+      }
+
+      post.comments.push(comment)
+
+      post.user = user
+
+      res.status(201).json(comment)
     } catch (error) {
       res.status(400).json(error)
     }
