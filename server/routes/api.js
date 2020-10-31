@@ -11,9 +11,9 @@ const router = express.Router();
 /**
  * @listens POST /register
  * @listens POST /login
+ * @listens GET /me
  * @listens GET /users
  * @listens PUT /users/:id
- * @listens DELETE /users/:id
  */
 router
   .post("/register", UserController.registerUser)
@@ -21,9 +21,10 @@ router
   .get("/me", passport.authenticate("jwt", { session: false }), (req, res) => {
     return res.status(200).json({ user: req.user });
   })
-  .get("/users", UserController.loginUser)
-  .put("/users/:id", UserController.updateData)
-  .delete("/users/:id", UserController.deleteData);
+
+  .get("/users", UserController.getUsers)
+  .put("/users/:id", passport.authenticate("jwt", { session: false }), UserController.updateUser);
+  // .delete("/users/:id", UserController.deleteData);
 
 /**
  * @listens POST /posts
