@@ -15,4 +15,14 @@ const commentSchema = new Schema({
   },
 });
 
+commentSchema.virtual("users", {
+  ref: "users",
+  localField: "_id",
+  foreignField: "comments"
+});
+
+commentSchema.set("toObject", { virtuals: true });
+commentSchema.set("toJSON", { virtuals: true });
+
+
 module.exports = model("comments", commentSchema);

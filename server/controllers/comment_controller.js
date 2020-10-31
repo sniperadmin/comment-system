@@ -5,7 +5,7 @@ const Post = require("../models/post_schema");
 module.exports = {
   async getComments(req, res) {
     try {
-      const comments = await Comment.find();
+      const comments = await Comment.find().populate("user");
       res.status(200).json(comments);
     } catch (error) {
       res.status(500).json(error);
@@ -19,6 +19,8 @@ module.exports = {
    */
   async createComment(req, res) {
     try {
+      req.body.user = req.user.id;
+
       const comment = await Comment.create(req.body);
       /**
        * find publisher

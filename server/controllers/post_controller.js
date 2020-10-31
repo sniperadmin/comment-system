@@ -9,7 +9,7 @@ module.exports = {
    */
   async getPosts(req, res) {
     try {
-      const posts = await Post.find();
+      const posts = await Post.find().populate("comments");
       res.status(200).json(posts);
     } catch (error) {
       res.status(500).json(error);
@@ -22,24 +22,23 @@ module.exports = {
    * @param {object} res
    */
   async createPost(req, res) {
-    console.log("user form post creation: ", req.user);
     try {
       // get user identity and add it to the body
       req.body.user = req.user.id;
 
-      const resData = await Post.create(req.body);
+      const post = await Post.create(req.body);
       /**
        * find publisher
        */
-      const user = await User.findById(resData.user);
+      const user = await User.findById(post.user);
       // insert posts into the user object
       if (!user.posts) {
-        user.posts = resData;
+        user.posts = post;
       }
 
-      user.posts.push(resData);
+      user.posts.push(post);
 
-      res.status(201).json(resData);
+      res.status(201).json(post);
     } catch (error) {
       if (error.name === "ValidationError") {
         return res.status(422).json(error);

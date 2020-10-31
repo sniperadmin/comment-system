@@ -33,9 +33,9 @@ router
  */
 router
   .get("/posts", PostController.getPosts)
-  .post("/posts", PostController.createPost)
-  // .put('/:id', PostController.)
-  .delete("/posts/:id", PostController.deletePost);
+  .post("/posts", passport.authenticate("jwt", { session: false }), PostController.createPost)
+  .put("/posts/:id", PostController.updatePost)
+  .delete("/posts/:id", passport.authenticate("jwt", { session: false }),PostController.deletePost);
 
 /**
  * @listens POST /comments
@@ -45,7 +45,7 @@ router
  */
 router
   .get("/comments", CommentController.getComments)
-  .post("/comments", CommentController.createComment)
+  .post("/comments", passport.authenticate("jwt", { session: false }), CommentController.createComment)
   // .put('/:id', CommentController.)
   .delete("/comments/:id", CommentController.deleteComment);
 
