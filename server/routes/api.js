@@ -11,9 +11,9 @@ const router = express.Router();
 /**
  * @listens POST /register
  * @listens POST /login
+ * @listens GET /me
  * @listens GET /users
  * @listens PUT /users/:id
- * @listens DELETE /users/:id
  */
 router
   .post("/register", UserController.registerUser)
@@ -21,9 +21,10 @@ router
   .get("/me", passport.authenticate("jwt", { session: false }), (req, res) => {
     return res.status(200).json({ user: req.user });
   })
-  .get("/users", UserController.loginUser)
-  .put("/users/:id", UserController.updateData)
-  .delete("/users/:id", UserController.deleteData);
+
+  .get("/users", UserController.getUsers)
+  .put("/users/:id", passport.authenticate("jwt", { session: false }), UserController.updateUser);
+  // .delete("/users/:id", UserController.deleteData);
 
 /**
  * @listens POST /posts
@@ -33,9 +34,9 @@ router
  */
 router
   .get("/posts", PostController.getPosts)
-  .post("/posts", PostController.createPost)
-  // .put('/:id', PostController.)
-  .delete("/posts/:id", PostController.deletePost);
+  .post("/posts", passport.authenticate("jwt", { session: false }), PostController.createPost)
+  .put("/posts/:id", PostController.updatePost)
+  .delete("/posts/:id", passport.authenticate("jwt", { session: false }),PostController.deletePost);
 
 /**
  * @listens POST /comments
@@ -45,7 +46,7 @@ router
  */
 router
   .get("/comments", CommentController.getComments)
-  .post("/comments", CommentController.createComment)
+  .post("/comments", passport.authenticate("jwt", { session: false }), CommentController.createComment)
   // .put('/:id', CommentController.)
   .delete("/comments/:id", CommentController.deleteComment);
 
