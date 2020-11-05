@@ -1,11 +1,13 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
+  <v-app>
+    <v-main>
+      <div id="nav">
+        <v-btn text link to="/">Home</v-btn> |
+        <v-btn text link to="/about">About</v-btn>
+        <router-view />
+      </div>
+    </v-main>
+  </v-app>
 </template>
 
 <style>
@@ -14,18 +16,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 #nav {
   padding: 30px;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.theme--dark.v-application {
+  background: rgb(8, 56, 100) !important;
+  background: linear-gradient(
+    180deg,
+    rgb(49, 30, 102) 0%,
+    rgb(94, 48, 99) 100%
+  );
 }
 </style>

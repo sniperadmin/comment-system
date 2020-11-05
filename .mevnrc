@@ -2,7 +2,7 @@
   "name": "comment-system",
   "template": "Default",
   "isConfigured": {
-    "client": false,
+    "client": true,
     "server": true
   }
 }
