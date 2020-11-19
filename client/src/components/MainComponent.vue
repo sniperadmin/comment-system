@@ -1,8 +1,10 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <h1>{{ msg }}</h1>
     <v-card light>
-      <v-tabs v-model="tab" align-with-title>
+      <!-- Vuetify Top card tabs -->
+      <v-tabs v-model="tab" headline>
+        <!-- customize slider color -->
         <v-tabs-slider color="indigo"></v-tabs-slider>
 
         <v-tab v-for="(item, i) in links" :key="i">
@@ -10,9 +12,15 @@
         </v-tab>
       </v-tabs>
 
+      <!-- Vuetify tabs content -->
       <v-tabs-items v-model="tab">
         <v-tab-item v-for="(item, i) in links" :key="i">
           <v-card flat light color="cyan">
+            <!--
+              dynamic Vuejs component rendering
+              it picks up component name and renders
+              the corresponding component
+            -->
             <component :is="item.component" />
           </v-card>
         </v-tab-item>
@@ -26,23 +34,24 @@ import ProfileComponent from "./subs/ProfileComponent";
 import PostsComponent from "./subs/PostsComponent";
 
 export default {
-  name: "ChatComponent",
+  name: "MainComponent",
   components: {
     ProfileComponent,
     PostsComponent
   },
   props: {
-    msg: String
+    msg: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {
       tab: null,
       links: [
-        { name: "Home", component: "profile-component" },
+        { name: "Profile", component: "profile-component" },
         { name: "Posts", component: "posts-component" }
-        // { name: "Comments", component: "comments-component" }
-      ],
-      text: "meow"
+      ]
     };
   }
 };
