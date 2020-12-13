@@ -26,6 +26,10 @@ export default new Vuex.Store({
     },
     SET_TOKEN: (state, payload) => {
       state.token = payload;
+    },
+    CLEAR_ALL: state => {
+      state.token = null;
+      state.user = null;
     }
   },
 
@@ -41,6 +45,13 @@ export default new Vuex.Store({
         commit("SET_USER", userInfo.data.user);
       } catch (error) {
         return error;
+      }
+    },
+    logoutUser({ commit }) {
+      try {
+        commit("CLEAR_ALL");
+      } catch (error) {
+        console.log(error);
       }
     }
   },

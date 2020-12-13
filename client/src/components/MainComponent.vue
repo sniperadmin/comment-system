@@ -2,20 +2,31 @@
   <v-container fluid>
     <h1>{{ msg }}</h1>
     <v-card light>
-      <!-- Vuetify Top card tabs -->
-      <v-tabs v-model="tab" headline>
-        <!-- customize slider color -->
-        <v-tabs-slider color="indigo"></v-tabs-slider>
+      <v-row no-gutters>
+        <v-col>
+          <!-- Vuetify Top card tabs -->
+          <v-tabs v-model="tab" headline>
+            <!-- customize slider color -->
+            <v-tabs-slider color="indigo"></v-tabs-slider>
 
-        <v-tab v-for="(item, i) in links" :key="i">
-          {{ item.name }}
-        </v-tab>
-      </v-tabs>
+            <v-tab v-for="(item, i) in links" :key="i">
+              {{ item.name }}
+            </v-tab>
+          </v-tabs>
+        </v-col>
+
+        <v-col align-self="center">
+          <v-btn v-if="getUser" outlined color="error" @click="logout">
+            <v-icon class="mr-3">mdi-power-standby</v-icon>
+            logout
+          </v-btn>
+        </v-col>
+      </v-row>
 
       <!-- Vuetify tabs content -->
       <v-tabs-items v-model="tab">
         <v-tab-item v-for="(item, i) in links" :key="i">
-          <v-card flat light color="cyan">
+          <v-card flat light color="blue-grey lighten-3">
             <!--
               dynamic Vuejs component rendering
               it picks up component name and renders
@@ -32,6 +43,7 @@
 <script>
 import ProfileComponent from "./subs/ProfileComponent";
 import PostsComponent from "./subs/PostsComponent";
+import { mapGetters } from "vuex";
 
 export default {
   name: "MainComponent",
@@ -53,6 +65,16 @@ export default {
         { name: "Posts", component: "posts-component" }
       ]
     };
+  },
+  computed: {
+    ...mapGetters(["getUser"])
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch("logoutUser").then(() => {
+        window.localStorage.removeItem("vuex");
+      });
+    }
   }
 };
 </script>

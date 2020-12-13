@@ -17,7 +17,8 @@ const postSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "users",
   },
-});
+},
+{ timestamps: true });
 
 /**
  * @action define schema virtual for posts
@@ -29,7 +30,7 @@ const postSchema = new Schema({
 postSchema.virtual("comments", {
   ref: "comments",
   localField: "_id",
-  foreignField: "post",
+  foreignField: "post"
 });
 
 /**

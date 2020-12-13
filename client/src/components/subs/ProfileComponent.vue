@@ -1,19 +1,44 @@
 <template>
   <v-container fluid>
-    <!-- This section for user login  -->
-    <v-card v-if="!getUser">
-      <h3 class="mb-3">Let's login to comment</h3>
-      <v-skeleton-loader
-        type="article, actions"
-        class="mb-3"
-      ></v-skeleton-loader>
+    <!--
+      This section requires user login
+    -->
+    <v-card v-if="!getUser" flat color="transparent">
+      <v-row justify="center">
+        <v-col cols="6">
+          <v-alert color="primary" outlined class="mb-3 font-weight-bold">
+            Let's login to add comments!
+          </v-alert>
+        </v-col>
+      </v-row>
 
-      <v-btn color="indigo" dark @click="dialog = true">
-        Login/Register here
-      </v-btn>
+      <v-row justify="center">
+        <v-col cols="6">
+          <v-skeleton-loader
+            type="list-item-avatar, article"
+            class="mb-3"
+            elevation="1"
+          ></v-skeleton-loader>
+        </v-col>
+      </v-row>
+
+      <v-card-actions>
+        <v-row>
+          <v-col>
+            <v-btn color="primary" dark @click="dialog = !dialog">
+              <v-icon left>
+                mdi-login-variant
+              </v-icon>
+              Login/Register
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-actions>
     </v-card>
 
-    <!-- this section if user is already logged in -->
+    <!--
+      this section shows logged in user details
+    -->
     <v-card v-else>
       <!-- Avatar will be in this column -->
       <v-row tag="v-card-text">
@@ -73,61 +98,25 @@
     </v-card>
 
     <!-- this dialog shows if login/register clicked -->
-    <v-dialog v-model="dialog" max-width="290">
-      <!-- dialog tabs -->
-      <v-tabs v-model="tab" align-with-title background-color="indigo darken-2">
-        <v-tabs-slider color="indigo"></v-tabs-slider>
-
-        <v-tab v-for="(item, i) in authComponents" :key="i">
-          {{ item.name }}
-        </v-tab>
-      </v-tabs>
-
-      <!-- dialog tab contents -->
-      <v-tabs-items v-model="tab">
-        <v-tab-item v-for="(item, i) in authComponents" :key="i">
-          <v-card flat light>
-            <component
-              :is="item.component"
-              :loginResponse="loginResponse"
-              :registerResponse="registerResponse"
-              @start-login="login"
-              @start-register="register"
-            />
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
-    </v-dialog>
+    <AuthModal @turn-false="dialog = false" :dialog="dialog" />
   </v-container>
 </template>
 
 <script>
-import axios from "axios";
+import AuthModal from "./auth/AuthModal.vue";
 import { mapGetters } from "vuex";
-import RegisterComponent from "@/components/subs/RegisterComponent";
-import LoginComponent from "@/components/subs/LoginComponent";
 import rules from "@/mixins/rules";
 
 export default {
+  components: { AuthModal },
   name: "ProfileComponent",
-  components: {
-    RegisterComponent,
-    LoginComponent
-  },
   mixins: [rules],
   computed: {
     ...mapGetters(["getUser"])
   },
   data() {
     return {
-      tab: null,
       dialog: false,
-      authComponents: [
-        { name: "Register", component: "register-component" },
-        { name: "Login", component: "login-component" }
-      ],
-      loginResponse: null,
-      registerResponse: null,
       // form values
       username: "",
       email: "",
@@ -149,38 +138,8 @@ export default {
   methods: {
     validateField() {
       this.$refs.edit.validate();
-    },
-    async login(payload) {
-      await axios
-        .post("http://localhost:9000/api/login", payload)
-        .then(res => {
-          this.loginResponse = res.data;
-          if (!res.data.success) {
-            // open notification
-          } else {
-            this.$store.dispatch("loginUser", res.data.token);
-            this.dialog = false;
-          }
-        })
-        .catch(error => {
-          this.loginResponse = error.response.data;
-        });
-    },
-    async register(payload) {
-      await axios
-        .post("http://localhost:9000/api/register", payload)
-        .then(res => {
-          this.registerResponse = res.data;
-          if (!res.data.success) {
-            // open notification
-          } else {
-            this.tab = 0;
-          }
-        })
-        .catch(error => (this.registerResponse = error.response.data));
     }
   }
 };
 </script>
-
 <style lang="scss" scoped></style>

@@ -9,7 +9,10 @@ module.exports = {
    */
   async getPosts(req, res) {
     try {
-      const posts = await Post.find().populate("comments");
+      const posts = await Post.find()
+        .populate({ path: "comments", populate: { path: "user", select: "username" } })
+        .populate("user", "username");
+
       res.status(200).json(posts);
     } catch (error) {
       res.status(500).json(error);
