@@ -5,7 +5,7 @@ const Post = require("../models/post_schema");
 module.exports = {
   async getComments(req, res) {
     try {
-      const comments = await Comment.find().populate("user");
+      const comments = await Comment.find().populate("user", "username");
       res.status(200).json(comments);
     } catch (error) {
       res.status(500).json(error);
