@@ -21,6 +21,7 @@
             :is="item.component"
             :loginResponse="loginResponse"
             :registerResponse="registerResponse"
+            :loading="loading"
             @start-login="login"
             @start-register="register"
           />
@@ -32,8 +33,8 @@
 
 <script>
 import axios from "axios";
-import RegisterComponent from "./RegisterComponent";
-import LoginComponent from "./LoginComponent";
+import RegisterComponent from "./auth-subs/RegisterComponent";
+import LoginComponent from "./auth-subs/LoginComponent";
 
 export default {
   name: "AuthModal",
@@ -62,28 +63,34 @@ export default {
       tab: null,
       // isOpen: this.dialog,
       authComponents: [
-        { name: "Register", component: "register-component" },
-        { name: "Login", component: "login-component" }
+        { name: "Login", component: "login-component" },
+        { name: "Register", component: "register-component" }
       ],
       loginResponse: null,
-      registerResponse: null
+      registerResponse: null,
+      loading: false
     };
   },
   methods: {
     async login(payload) {
+      this.loading = true;
       await axios
         .post("http://localhost:9000/api/login", payload)
         .then(res => {
           this.loginResponse = res.data;
           if (!res.data.success) {
             // open notification
+            this.loading = false;
           } else {
             this.$store.dispatch("loginUser", res.data.token);
-            this.dialog = false;
+            this.loading = false;
+            // tell parent to close modal
+            this.$emit("turn-false");
           }
         })
         .catch(error => {
           this.loginResponse = error.response.data;
+          this.loading = false;
         });
     },
     async register(payload) {

@@ -4,7 +4,7 @@
       Login
     </v-card-title>
     <v-card-text>
-      <v-form ref="login">
+      <v-form ref="login" :valid="valid">
         <v-text-field
           v-model="loginForm.username"
           label="Username"
@@ -16,6 +16,7 @@
           label="Password"
           :rules="passwordRules"
           @input="$emit('input', $event)"
+          @keydown.native.enter="handleLogin"
         />
       </v-form>
     </v-card-text>
@@ -31,7 +32,12 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="indigo darken-1" dark @click="handleLogin">
+      <v-btn
+        color="indigo darken-1"
+        dark
+        :loading="loading"
+        @click="handleLogin"
+      >
         login
       </v-btn>
     </v-card-actions>
@@ -48,10 +54,15 @@ export default {
     loginResponse: {
       type: Object,
       default: null
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
+      valid: true,
       loginForm: {
         username: "",
         password: ""
