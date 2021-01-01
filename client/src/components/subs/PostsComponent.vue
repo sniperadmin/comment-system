@@ -25,12 +25,15 @@
               <v-avatar size="50" color="grey" class="mr-4 text-capitalize">
                 {{ post.user.username.substring(0, 1) }}
               </v-avatar>
-              <span>
+              <v-card flat>
                 {{ post.user.username }}
-              </span>
+                <p class="text-caption grey--text">
+                  {{ post.createdAt | moment("calendar") }}
+                </p>
+              </v-card>
             </v-card-title>
 
-            <v-card-text>
+            <v-card-text class="bordered">
               {{ post.description }}
             </v-card-text>
 
